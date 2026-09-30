@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#064e3b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="THE EIGHTY" />
+  <title>THE EIGHTY</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <link rel="icon" href="assets/icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <button class="brand-button" id="brandHomeBtn" aria-label="Return Home">
+        <img src="assets/the-eighty-logo.png" alt="THE EIGHTY" class="brand-logo" />
+      </button>
+      <div class="topbar-copy">
+        <div class="eyebrow">THE EIGHTY</div>
+        <div class="topbar-title">Consistency over perfection.</div>
+      </div>
+      <div class="goal-line-mini">
+        <span>GOAL LINE</span>
+        <strong>80%</strong>
+      </div>
+    </header>
+
+    <main id="mainContent" class="main-content">
+      <section id="screen-home" class="screen active" data-screen="home">
+        <div class="hero-card green-ombre">
+          <div class="hero-topline">
+            <div>
+              <div class="eyebrow light">OCTOBER 2026</div>
+              <h1>Show up today.</h1>
+            </div>
+            <div class="hero-score" id="heroScore">
+              <strong id="overallScoreValue">—</strong>
+              <span id="overallScoreLabel">Ready to begin</span>
+            </div>
+          </div>
+          <div class="hero-bar-wrap">
+            <div class="hero-bar"><div id="overallBar" class="hero-bar-fill" style="width:0%"></div></div>
+            <div class="hero-bar-labels"><span>0</span><span class="goal-marker-label">80</span><span>100</span></div>
+          </div>
+        </div>
+
+        <div class="date-controller card">
+          <button class="icon-btn" id="prevDateBtn" aria-label="Previous day">‹</button>
+          <div class="date-copy">
+            <div class="eyebrow" id="dayNumberLabel">DAY 1 OF 31</div>
+            <div class="date-title" id="selectedDateLabel">Thursday, October 1</div>
+          </div>
+          <button class="icon-btn" id="nextDateBtn" aria-label="Next day">›</button>
+        </div>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">YOUR FIVE</div>
+              <h2>Consistency by category</h2>
+            </div>
+            <span class="status-chip" id="todayScoreChip">Today —</span>
+          </div>
+          <div class="ring-row" id="categoryRings"></div>
+        </section>
+
+        <section class="card mileage-card">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">OCTOBER CHALLENGE</div>
+              <h2>100 Miles</h2>
+            </div>
+            <div class="mileage-total"><strong id="milesTotal">0.0</strong><span>/ 100 mi</span></div>
+          </div>
+          <div class="progress-track"><div id="milesProgress" class="progress-fill green-ombre" style="width:0%"></div></div>
+          <div class="three-stat-grid">
+            <div><span>Remaining</span><strong id="milesRemaining">100.0 mi</strong></div>
+            <div><span>Pace</span><strong id="milesPace">3.23/day</strong></div>
+            <div><span>Status</span><strong id="paceStatus">Starts Oct 1</strong></div>
+          </div>
+          <div class="mileage-entry">
+            <label for="milesInput">Walk + run miles for this day</label>
+            <div class="input-action-row">
+              <input id="milesInput" type="number" min="0" max="50" step="0.1" inputmode="decimal" placeholder="0.0" />
+              <button class="btn btn-primary" id="saveMilesBtn">Save</button>
+            </div>
+            <div class="helper">Pickleball and other activities count toward movement, but not the 100-mile challenge.</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">TODAY'S COMMITMENTS</div>
+              <h2>Close what matters.</h2>
+            </div>
+            <button class="text-btn" id="jumpGoalsBtn">Edit goals</button>
+          </div>
+          <div id="dailyTasks" class="task-list"></div>
+          <div class="today-summary" id="todaySummary"></div>
+        </section>
+      </section>
+
+      <section id="screen-path" class="screen" data-screen="path">
+        <div class="page-title-block">
+          <div class="eyebrow">THE PATH</div>
+          <h1>How do you want to approach today?</h1>
+          <p>THE EIGHTY adjusts the next move to your actual capacity.</p>
+        </div>
+
+        <div class="mode-grid">
+          <button class="mode-card" data-mode="beyond" aria-pressed="false">
+            <span class="mode-kicker">HIGH ENERGY</span>
+            <strong>GO BEYOND</strong>
+            <small>Capitalize. Catch up or bank progress.</small>
+          </button>
+          <button class="mode-card selected" data-mode="path" aria-pressed="true">
+            <span class="mode-kicker">STEADY EFFORT</span>
+            <strong>SHOW ME THE PATH</strong>
+            <small>Find the shortest realistic route to 80%+.</small>
+          </button>
+          <button class="mode-card" data-mode="protect" aria-pressed="false">
+            <span class="mode-kicker">HEAVY DAY</span>
+            <strong>PROTECT THE HABIT</strong>
+            <small>Minimum wins. Keep the habit alive.</small>
+          </button>
+        </div>
+
+        <section class="card path-plan-card">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">THE EIGHTY RECOMMENDS</div>
+              <h2 id="pathPlanTitle">Show Me The Path</h2>
+            </div>
+            <span class="status-chip" id="pathTimeChip">~20–30 min</span>
+          </div>
+          <p id="pathPlanSummary" class="muted"></p>
+          <div id="pathActionList" class="path-actions"></div>
+          <div class="projection-box">
+            <span>IF YOU COMPLETE THIS PATH</span>
+            <strong id="pathProjection">Your projected consistency will update here.</strong>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="eyebrow">WHAT GOT IN THE WAY?</div>
+          <h2>Use the WHY to choose the next action.</h2>
+          <p class="muted">This is context, not an excuse. Pick anything that affected consistency.</p>
+          <div id="reasonGrid" class="reason-grid"></div>
+          <label class="field-label" for="dailyNote">Anything else?</label>
+          <textarea id="dailyNote" rows="3" placeholder="Optional note..."></textarea>
+          <button class="btn btn-secondary full" id="saveContextBtn">Save today's context</button>
+        </section>
+      </section>
+
+      <section id="screen-progress" class="screen" data-screen="progress">
+        <div class="page-title-block">
+          <div class="eyebrow">PROGRESS</div>
+          <h1>The Eighty Score</h1>
+          <p>Five life categories, equally weighted. The 100-mile challenge is tracked separately.</p>
+        </div>
+
+        <section class="score-feature card">
+          <div class="big-score-ring" id="bigScoreRing"><div><strong id="bigScoreValue">—</strong><span id="bigScoreLabel">Ready</span></div></div>
+          <div class="score-feature-copy">
+            <div class="legend-row"><span class="dot dot-red"></span><span>0–50 Inconsistent</span></div>
+            <div class="legend-row"><span class="dot dot-orange"></span><span>51–64 Needs attention</span></div>
+            <div class="legend-row"><span class="dot dot-yellow"></span><span>65–79 Close — identify the WHY</span></div>
+            <div class="legend-row"><span class="dot dot-green"></span><span>80–99 Consistently successful</span></div>
+            <div class="legend-row"><span class="dot dot-perfect"></span><span>100 Perfect</span></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-head"><div><div class="eyebrow">CATEGORY BREAKDOWN</div><h2>Where you're showing up</h2></div></div>
+          <div id="categoryBars" class="category-bars"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-head"><div><div class="eyebrow">OCTOBER</div><h2>Consistency calendar</h2></div></div>
+          <div class="calendar-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+          <div id="calendarGrid" class="calendar-grid"></div>
+          <div class="calendar-key"><span><i class="k-perfect"></i>100</span><span><i class="k-green"></i>80+</span><span><i class="k-yellow"></i>65–79</span><span><i class="k-orange"></i>51–64</span><span><i class="k-red"></i>≤50</span></div>
+        </section>
+      </section>
+
+      <section id="screen-review" class="screen" data-screen="review">
+        <div class="page-title-block">
+          <div class="eyebrow">WEEKLY REVIEW</div>
+          <h1>Learn. Adjust. Keep moving.</h1>
+          <p>The goal is not to explain away the score. It is to make the next week easier to execute.</p>
+        </div>
+
+        <section class="card">
+          <div class="section-head">
+            <div><div class="eyebrow" id="reviewWeekLabel">WEEK 1</div><h2>What got in the way?</h2></div>
+            <span class="status-chip" id="reviewScoreChip">—</span>
+          </div>
+          <div id="weeklyReasonGrid" class="reason-grid"></div>
+          <label class="field-label" for="weeklyAdjustment">One adjustment for next week</label>
+          <textarea id="weeklyAdjustment" rows="4" placeholder="Example: protect a 10-minute reset before dinner."></textarea>
+          <button class="btn btn-primary full" id="saveReviewBtn">Save weekly review</button>
+        </section>
+
+        <section class="card coaching-card">
+          <div class="eyebrow">NEXT MOVE</div>
+          <h2>Don't stop at the WHY.</h2>
+          <p id="reviewCoachingText">Choose your capacity and let THE PATH turn the lesson into a next action.</p>
+          <button class="btn btn-secondary full" id="reviewToPathBtn">Show Me The Path</button>
+        </section>
+      </section>
+
+      <section id="screen-goals" class="screen" data-screen="goals">
+        <div class="page-title-block">
+          <div class="eyebrow">GOALS</div>
+          <h1>Build the system around real life.</h1>
+          <p>Targets can change without rebuilding the app. Minimum Wins protect consistency on hard days.</p>
+        </div>
+
+        <section class="card">
+          <div class="section-head"><div><div class="eyebrow">YOUR FIVE</div><h2>Editable goals</h2></div></div>
+          <div id="goalEditors" class="goal-editors"></div>
+        </section>
+
+        <section class="card">
+          <div class="eyebrow">DATA</div>
+          <h2>Backup & mileage import</h2>
+          <p class="muted">Everything is saved on this device. Export a backup anytime.</p>
+          <div class="stack-actions">
+            <button class="btn btn-secondary full" id="exportBtn">Export THE EIGHTY backup</button>
+            <label class="btn btn-secondary full file-label">Import THE EIGHTY backup<input id="importInput" type="file" accept="application/json,.json" /></label>
+            <label class="btn btn-secondary full file-label">Import mileage CSV<input id="csvInput" type="file" accept="text/csv,.csv" /></label>
+          </div>
+          <div class="helper">Mileage CSV format: <strong>date,miles</strong> — for example: 2026-10-01,3.2</div>
+        </section>
+
+        <section class="card install-card">
+          <div class="eyebrow">IPHONE</div>
+          <h2>Install to Home Screen</h2>
+          <p>When hosted on HTTPS, open in Safari → Share → Add to Home Screen. Standalone mode gives the cleanest safe-area experience.</p>
+        </section>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <button class="nav-btn active" data-nav="home" aria-label="Home"><span class="nav-icon">⌂</span><span>Home</span></button>
+      <button class="nav-btn" data-nav="path" aria-label="The Path"><span class="nav-icon">➜</span><span>Path</span></button>
+      <button class="nav-btn" data-nav="progress" aria-label="Progress"><span class="nav-icon">◔</span><span>Progress</span></button>
+      <button class="nav-btn" data-nav="review" aria-label="Review"><span class="nav-icon">✓</span><span>Review</span></button>
+      <button class="nav-btn" data-nav="goals" aria-label="Goals"><span class="nav-icon">⚙</span><span>Goals</span></button>
+    </nav>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

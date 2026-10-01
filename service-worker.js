@@ -1,4 +1,4 @@
-const CACHE_NAME = 'the-eighty-v2-1';
+const CACHE_NAME = 'the-eighty-v2-2';
 const CORE = [
   './',
   './index.html',

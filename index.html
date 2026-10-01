@@ -94,6 +94,27 @@
 .nav-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center}.nav-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:370px){.fitness-import-layout{grid-template-columns:1fr}.fitness-import-visual{height:150px}.workout-form-grid{grid-template-columns:1fr}}
 
+
+/* V2.4 Data Management */
+.data-management-card{margin-top:14px}
+.data-action-card{display:grid;gap:10px;padding:13px;border-radius:16px;background:linear-gradient(145deg,#f7faf8,#eef6f0);border:1px solid #d7e3da;margin-top:10px}
+.data-action-card strong{display:block;font-size:.9rem}
+.data-action-card span{display:block;margin-top:3px;font-size:.76rem;line-height:1.4;color:var(--muted)}
+.data-btn{width:100%;min-height:44px}
+.data-btn.secondary{background:#edf7f0;color:#0b6a3d;border:1px solid #c7dfce}
+.data-btn.warning{background:#fff4df;color:#9a5600;border:1px solid #efcf97}
+.data-btn.danger{background:#fff0ee;color:#a62b20;border:1px solid #efbbb5}
+.danger-zone{background:linear-gradient(145deg,#fff9f8,#fff0ee);border-color:#efc8c2}
+.legacy-mileage-panel{margin-top:10px;padding:12px;border-radius:16px;background:#fffaf0;border:1px solid #ecd49d}
+.legacy-mileage-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.text-btn{border:0;background:transparent;color:#0c6d46;font-weight:900;padding:7px}
+.legacy-mileage-list{display:grid;gap:7px;margin:10px 0}
+.legacy-mileage-row{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#fff;border:1px solid #eadfca;border-radius:12px;padding:10px}
+.legacy-mileage-row .legacy-date{font-size:.78rem;color:var(--muted)}
+.legacy-mileage-row .legacy-value{font-weight:950}
+.legacy-mileage-row button{min-height:36px;border-radius:10px;padding:6px 9px;border:1px solid #efbbb5;background:#fff0ee;color:#a62b20;font-weight:900}
+.legacy-empty{padding:10px;border-radius:12px;background:#fff;color:var(--muted);font-size:.8rem}
+
 </style>
 </head>
 <body>
@@ -216,7 +237,51 @@
       <div class="page-title-block"><div class="eyebrow">GOALS</div><h1>Edit your standards.</h1><p>Targets and Minimum Wins stay editable while you learn what is sustainable.</p></div>
       <section class="card"><div id="goalEditors" class="goal-editors"></div></section>
       <section class="card"><div class="eyebrow">DATA</div><h2>Backup Your Progress</h2><div class="stack-actions"><button class="btn btn-secondary full" id="exportBtn">Export backup</button><label class="btn btn-secondary full file-label">Import backup<input id="importInput" type="file" accept="application/json,.json" /></label></div></section>
-    </section>
+    
+      <section class="card data-management-card">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">DATA & RESET</div>
+            <h2>Manage Test Data</h2>
+          </div>
+        </div>
+        <p class="helper">Use these controls for test entries without affecting any other app on your phone.</p>
+
+        <div class="data-action-card">
+          <div>
+            <strong>Legacy / Manual Mileage</strong>
+            <span>Older mileage entries from previous versions live here. They still count toward the 100-mile total until removed.</span>
+          </div>
+          <button class="btn data-btn secondary" id="viewLegacyMilesBtn" type="button">View Legacy Mileage</button>
+        </div>
+
+        <div id="legacyMileagePanel" class="legacy-mileage-panel hidden">
+          <div class="legacy-mileage-head">
+            <strong>Legacy Mileage Entries</strong>
+            <button class="text-btn" id="closeLegacyMilesBtn" type="button">Close</button>
+          </div>
+          <div id="legacyMileageList" class="legacy-mileage-list"></div>
+          <button class="btn data-btn warning" id="clearLegacyMilesBtn" type="button">Clear Legacy Mileage</button>
+        </div>
+
+        <div class="data-action-card">
+          <div>
+            <strong>Reset 100-Mile Challenge Data</strong>
+            <span>Clears legacy/manual mileage only. Saved Workout Log entries remain and will still count if they are walking/running workouts.</span>
+          </div>
+          <button class="btn data-btn warning" id="resetMileageBtn" type="button">Reset Mileage Data</button>
+        </div>
+
+        <div class="data-action-card danger-zone">
+          <div>
+            <strong>Reset The Eighty Test Data</strong>
+            <span>Clears check-ins, WHY entries, reviews, workouts, and mileage. Your goal definitions stay intact.</span>
+          </div>
+          <button class="btn data-btn danger" id="resetTestDataBtn" type="button">Reset Test Data</button>
+        </div>
+      </section>
+
+</section>
   </main>
 
   
@@ -299,6 +364,58 @@ function editWorkout(id){const w=(state.workouts||[]).find(x=>x.id===id);if(w)sh
 function deleteWorkout(id){const w=(state.workouts||[]).find(x=>x.id===id);if(!w)return;const msg=isMileageWorkout(w)?'Delete this workout? Its qualifying distance will also be removed from the 100-mile total.':'Delete this workout?';if(!window.confirm(msg))return;state.workouts=state.workouts.filter(x=>x.id!==id);save();renderAll();toast('Workout Deleted')}
 function renderWorkoutLog(){const list=$('#workoutList');if(!list)return;state.workouts??=[];const workouts=[...state.workouts].sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||0)-(a.createdAt||0));$('#workoutCountChip').textContent=`${workouts.length} Workout${workouts.length===1?'':'s'}`;list.innerHTML='';if(!workouts.length){list.innerHTML='<div class="workout-empty"><strong>No Workouts Yet.</strong><br>Add one manually or upload an Apple Fitness screenshot.</div>';return}workouts.forEach(w=>{const item=document.createElement('article');item.className='workout-item';const metrics=[];if(w.duration)metrics.push(['Workout Time',esc(w.duration)]);if(w.distance!==''&&w.distance!=null)metrics.push(['Distance',`${Number(w.distance).toFixed(2)} mi`]);if(w.pace)metrics.push(['Avg. Pace',esc(w.pace)]);if(w.calories!==''&&w.calories!=null)metrics.push(['Total Calories',`${Number(w.calories).toLocaleString()} cal`]);item.innerHTML=`<div class="workout-item-head"><div><div class="workout-type">${esc(w.type)}</div><div class="workout-date">${fmtWorkoutDate(w.date)} · ${w.source==='screenshot'?'Screenshot':'Manual'}</div></div></div><div class="workout-metrics">${metrics.map(([a,b])=>`<div class="workout-metric"><span>${a}</span><strong>${b}</strong></div>`).join('')}</div>${isMileageWorkout(w)?`<div class="qualifies-chip">Counts Toward 100 Miles · ${Number(w.distance).toFixed(2)} mi</div>`:''}<div class="workout-actions"><button class="workout-edit" type="button">Edit</button><button class="workout-delete" type="button">Delete</button></div>`;const [eb,db]=item.querySelectorAll('.workout-actions button');eb.onclick=()=>editWorkout(w.id);db.onclick=()=>deleteWorkout(w.id);list.appendChild(item)})}
 
+
+function legacyMileageEntries(){
+  return Object.entries(state.miles||{})
+    .map(([date,miles])=>({date,miles:Number(miles)||0}))
+    .filter(x=>x.miles>0)
+    .sort((a,b)=>a.date.localeCompare(b.date));
+}
+function renderLegacyMileage(){
+  const list=$('#legacyMileageList');
+  if(!list)return;
+  const entries=legacyMileageEntries();
+  list.innerHTML='';
+  if(!entries.length){
+    list.innerHTML='<div class="legacy-empty"><strong>No Legacy Mileage.</strong><br>Nothing from older mileage-entry versions is affecting your total.</div>';
+    return;
+  }
+  entries.forEach(entry=>{
+    const row=document.createElement('div');
+    row.className='legacy-mileage-row';
+    row.innerHTML=`<div><div class="legacy-date">${fmtWorkoutDate(entry.date)}</div><div class="legacy-value">${entry.miles.toFixed(2)} mi</div></div><button type="button">Delete</button>`;
+    row.querySelector('button').onclick=()=>{
+      if(!window.confirm(`Delete ${entry.miles.toFixed(2)} miles from ${fmtWorkoutDate(entry.date)}?`))return;
+      delete state.miles[entry.date];
+      save();renderAll();renderLegacyMileage();toast('Legacy Mileage Deleted');
+    };
+    list.appendChild(row);
+  });
+}
+function clearLegacyMileage(){
+  const count=legacyMileageEntries().length;
+  if(!count){toast('No Legacy Mileage To Clear');return}
+  if(!window.confirm(`Clear all ${count} legacy mileage entr${count===1?'y':'ies'}? This will not delete Workout Log entries.`))return;
+  state.miles={};save();renderAll();renderLegacyMileage();toast('Legacy Mileage Cleared');
+}
+function resetMileageData(){
+  const old=legacyMilesTotal();
+  if(old<=0){toast('No Legacy Mileage To Reset');return}
+  if(!window.confirm('Reset legacy/manual 100-mile challenge mileage? Saved Workout Log entries will remain and qualifying walk/run workouts will still count.'))return;
+  state.miles={};save();renderAll();renderLegacyMileage();toast('Mileage Data Reset');
+}
+function resetTestData(){
+  const ok=window.confirm('Reset The Eighty test data? This clears daily check-ins, WHY entries, reviews, workouts, and mileage. Your goal definitions will stay intact.');
+  if(!ok)return;
+  const goals=state.goals||defaultGoals;
+  state={goals,days:{},miles:{},why:{},reviews:{},workouts:[]};
+  save();
+  selectedDay=1;
+  renderAll();
+  renderLegacyMileage();
+  toast('Test Data Reset');
+}
+
 function renderAll(){renderHome();renderProgress();renderPath();renderReview();renderGoals()}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function attr(s){return esc(s)}
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
@@ -310,6 +427,18 @@ $('#cancelWorkoutBtn').onclick=()=>{$('#workoutEditor').classList.add('hidden');
 $('#saveWorkoutBtn').onclick=saveWorkoutFromEditor;
 $('#fitnessScreenshotInput').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;const status=$('#ocrStatus');status.classList.remove('hidden');status.textContent='Reading Screenshot…';let text='';try{if(window.Tesseract){const r=await Tesseract.recognize(f,'eng',{logger:m=>{if(m.status==='recognizing text')status.textContent=`Reading Screenshot… ${Math.round((m.progress||0)*100)}%`}});text=r.data.text||''}else throw new Error('OCR unavailable');const parsed=parseWorkout(text);clearWorkoutForm();$('#workoutType').value=parsed.activity||'';$('#workoutDate').value=parsed.date||dateKey();$('#workoutTime').value=parsed.duration||'';$('#workoutDistance').value=parsed.miles??'';$('#workoutPace').value=parsed.pace||'';$('#workoutCalories').value=parsed.calories??'';$('#workoutEditorTitle').textContent='Review Screenshot Workout';$('#workoutEditor').dataset.source='screenshot';$('#workoutEditor').classList.remove('hidden');status.textContent='Workout Read. Review the details before saving.'}catch{clearWorkoutForm();showWorkoutEditor(null,'screenshot');$('#workoutEditorTitle').textContent='Review Screenshot Workout';status.textContent='Auto-read could not finish. Enter or correct the workout details below.'}e.target.value=''};
 function parseWorkout(text){const cleaned=text.replace(/\s+/g,' ');const am=cleaned.match(/(Outdoor Run|Outdoor Walk|Indoor Run|Indoor Walk|Pickleball|Traditional Strength Training|Functional Strength Training|Cycling|Hiking|Yoga)/i);const activity=am?am[1].replace(/\b\w/g,c=>c.toUpperCase()):'Workout';const mm=cleaned.match(/(?:Distance\s*)?(\d{1,2}(?:\.\d{1,2})?)\s*(?:MI|MILES)/i);const tm=cleaned.match(/Workout Time\s*([0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?)/i);const pm=cleaned.match(/Avg\.?\s*Pace\s*([0-9]{1,2}[':][0-9]{2}(?:["”])?(?:\/?MI)?)/i);const cm=cleaned.match(/Total Calories\s*([0-9,]{2,7})\s*CAL/i);let date=dateKey();const md=cleaned.match(/(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[,\s]+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2})/i);if(md){const months={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};date=`2026-${String(months[md[1].slice(0,3)]).padStart(2,'0')}-${String(+md[2]).padStart(2,'0')}`}let pace=pm?pm[1].replace("'",":").replace(/[”"]/g,''):'';if(pace&&!/\/mi$/i.test(pace))pace+='/mi';return{activity,miles:mm?+mm[1]:null,date,duration:tm?tm[1]:'',pace,calories:cm?Number(cm[1].replace(/,/g,'')):null}}
+
+const viewLegacyBtn=$('#viewLegacyMilesBtn');
+if(viewLegacyBtn)viewLegacyBtn.onclick=()=>{$('#legacyMileagePanel').classList.remove('hidden');renderLegacyMileage()};
+const closeLegacyBtn=$('#closeLegacyMilesBtn');
+if(closeLegacyBtn)closeLegacyBtn.onclick=()=>$('#legacyMileagePanel').classList.add('hidden');
+const clearLegacyBtn=$('#clearLegacyMilesBtn');
+if(clearLegacyBtn)clearLegacyBtn.onclick=clearLegacyMileage;
+const resetMileageBtn=$('#resetMileageBtn');
+if(resetMileageBtn)resetMileageBtn.onclick=resetMileageData;
+const resetTestBtn=$('#resetTestDataBtn');
+if(resetTestBtn)resetTestBtn.onclick=resetTestData;
+
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));renderAll();
 })();
 

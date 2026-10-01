@@ -1,14 +1,22 @@
 {
-  "name":"THE EIGHTY",
-  "short_name":"EIGHTY",
-  "start_url":"./",
-  "scope":"./",
-  "display":"standalone",
-  "background_color":"#eef7f0",
-  "theme_color":"#0c6d46",
-  "orientation":"portrait",
-  "icons":[
-    {"src":"assets/icons/icon-192.png","sizes":"192x192","type":"image/png"},
-    {"src":"assets/icons/icon-512.png","sizes":"512x512","type":"image/png"}
+  "name": "THE EIGHTY",
+  "short_name": "EIGHTY",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eef7f1",
+  "theme_color": "#0c6d46",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
